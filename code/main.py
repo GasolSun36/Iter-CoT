@@ -4,7 +4,6 @@ import argparse
 import time
 import jsonlines
 from utils import *
-from iter_cot_few_shot import *
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
