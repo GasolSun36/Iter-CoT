@@ -2,7 +2,7 @@ import jsonlines
 import json
 import requests
 from iter_cot_few_shot import *
-
+import re
 
 def gpt(prompt, n=1, model='', response_length=500, temperature=0, top_p=1, frequency_penalty=0,
               presence_penalty=0, start_text='', restart_text='', stop_seq=[], api_key='', **kwargs):
@@ -108,34 +108,35 @@ def process4evaluate(args):
     re_pattern_pre = ""
     re_pattern_post = ""
     if args.dataset == "aqua":
-        with open("../data/aqua/test.json", 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-        decoder = json.JSONDecoder()
-        for line in lines:
-            json_res = decoder.raw_decode(line)[0]
-            golden.append(json_res["correct"])
+        with open("../data/aqua/test.json", 'r', encoding='utf-8') as label_f:
+            for i in label_f.readlines():
+                for j in json.loads(i)["options"]:
+                    if json.loads(i)["correct"] == j[0]:
+                        golden.append(j.split(")", 1))
         re_pattern_pre = "\[[\s\S]*?\]"
+
     elif args.dataset == "gsm8k":
-        with open("../data/gsm8k/gold/math_test_answer.txt", 'r') as label_f:
-            golden = label_f.readlines()
+        with jsonlines.open("../data/gsm8k/test.jsonl", 'r') as label_f:
+            for data in label_f:
+                golden.append(re.search("[0-9]+", data["answer"]).group())
         re_pattern_pre="{.*(([1-9]\d*\.?\d*)|(0\.\d*[1-9])|([0-9]+)).*?}"
         re_pattern_post="([1-9]\d*\.?\d*)|(0\.\d*[1-9])|([0-9]+)"
+
     elif args.dataset == "csqa":
         with open("../data/csqa/test.jsonl", 'r', encoding="UTF-8") as label_f:
             for i in label_f:
                 golden.append(json.loads(i)["answer"])
         re_pattern_pre = "\[[\s\S]*?\]"
+
     elif args.dataset == "addsub":
         with open("../data/addsub/AddSub.json", 'r') as label_f:
             datas = json.load(label_f)
-        golden = []
         for data in datas:
             a = str(data["lSolutions"][0])
-            if a[-2:] == ".0":
-                a = a[:-2]
             golden.append(a)
         re_pattern_pre="{.*(([1-9]\d*\.?\d*)|(0\.\d*[1-9])|([0-9]+)).*?}"
         re_pattern_post="([1-9]\d*\.?\d*)|(0\.\d*[1-9])|([0-9]+)"
+
     elif args.dataset == "stqa":
         with open("../data/stqa/strategyqa_test.json", 'r', encoding='utf-8') as f:
             json_data = json.load(f)
@@ -145,46 +146,48 @@ def process4evaluate(args):
             else:
                 golden.append("no")
         re_pattern_pre = "\[.*?\]"
+
     elif args.dataset == "svamp":
         with open("../data/svamp/SVAMP.json", 'r') as label_f:
             datas = json.load(label_f)
         golden = []
         for data in datas:
             a = str(data["Answer"])
-            if a[-2:] == ".0":
-                a = a[:-2]
             golden.append(a)
         re_pattern_pre = "{.*(([1-9]\d*\.?\d*)|(0\.\d*[1-9])|([0-9]+)).*?}"
         re_pattern_post="([1-9]\d*\.?\d*)|(0\.\d*[1-9]|([0-9]+))"
+
     elif args.dataset == "asdiv":
         with open("../data/asdiv/asdiv.json", 'r') as label_f:
             datas = json.load(label_f)['Instances']
         golden = [i['output'][0] for i in datas]
         re_pattern_pre = "{.*(([1-9]\d*\.?\d*)|(0\.\d*[1-9])|([0-9]+)).*?}"
         re_pattern_post="([1-9]\d*\.?\d*)|(0\.\d*[1-9]|([0-9]+))"
+
     elif args.dataset == "singleeq":
         with open("../data/singleeq/questions.json", 'r') as label_f:
             datas = json.load(label_f)
         golden = []
         for data in datas:
             a = str(data["lSolutions"][0])
-            if a[-2:] == ".0":
-                a = a[:-2]
             golden.append(a)
         re_pattern_pre="{.*(([1-9]\d*\.?\d*)|(0\.\d*[1-9])|([0-9]+)).*?}"
         re_pattern_post="([1-9]\d*\.?\d*)|(0\.\d*[1-9]|([0-9]+))"
+
     elif args.dataset == "date":
         with open("../data/date/test.json", 'r', encoding='utf-8') as f:
             lines = json.load(f)
         for line in lines:
             golden.append(line["answer"])
         re_pattern_pre="\{[\s\S]*?\}"
+
     elif args.dataset == "object_tracking":
         with open("../data/object_tracking/test.json", 'r', encoding='utf-8') as f:
             lines = json.load(f)
         for line in lines:
             golden.append(line["answer"])
         re_pattern_pre = "\{[\s\S]*?\}"
+
     elif args.dataset == "letter":
         with open("../data/lastletter/last_letters.json", 'r', encoding='utf-8') as f:
             json_data = json.load(f)
@@ -192,6 +195,7 @@ def process4evaluate(args):
         for line in json_data:
             golden.append(line["answer"])
         re_pattern_pre="{.*?}"
+
     else:
         raise ValueError("dataset is not properly defined ...")
     return golden, re_pattern_pre, re_pattern_post

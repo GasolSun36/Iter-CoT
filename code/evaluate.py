@@ -4,8 +4,8 @@ import argparse
 import parser
 from utils import *
 parser = argparse.ArgumentParser()
-parser.add_argument("--dataset", type=str, default='gsm8k', help="Please use lowercase dataset.")
-parser.add_argument("--result_file", type=str, default='output/gsm8k.txt')
+parser.add_argument("--data_file", type=str, default='gsm8k', help="Please use lowercase dataset.")
+parser.add_argument("--result_file", type=str, default='output/gsm8k.json')
 parser.add_argument("--prompt_file", type=str,
                     default='output/gsm8k_samples.txt')
 parser.add_argument("--output_file", type=str,
