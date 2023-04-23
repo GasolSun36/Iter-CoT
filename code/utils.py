@@ -1,4 +1,4 @@
-
+import jsonlines
 import json
 import requests
 from iter_cot_few_shot import *
@@ -30,63 +30,77 @@ def decoder_for_gpt(input, max_length):
 
 def read_dataset(args):
     if args.dataset == "aqua":
-        args.dataset_path = "../dataset/aqua/test.json"
-        args.output_path = "../output/aqua.txt"
-        args.strong_few_shot = few_shot_4_aqua_strong
-        args.weak_few_shot = few_shot_4_aqua_weak
+        with open("../dataset/aqua/test.json", 'r', encoding="UTF-8") as f:
+            test_data = [json.loads(i)["question"] for i in f.readlines()]
+        args.output_path = "../output/aqua.json"
+
     elif args.dataset == "gsm8k":
-        args.dataset_path = "../dataset/gsm8k/test.jsonl"
-        args.output_path = "../output/gsm8k.txt"
-        args.strong_few_shot = few_shot_4_gsm8k_strong
-        args.weak_few_shot = few_shot_4_gsm8k_weak
-    elif args.dataset == "commonsenseqa":
-        args.dataset_path = "../dataset/commonsenseqa/test.jsonl"
-        args.output_path = "../output/commonsenseqa.txt"
-        args.strong_few_shot = few_shot_4_commonsense_strong
-        args.weak_few_shot = few_shot_4_commonsenseqa_weak
+        with jsonlines.open("../dataset/gsm8k/test.jsonl", "r", encoding="UTF-8") as f:
+            test_data = [i["question"] for i in f]
+        args.output_path = "../output/gsm8k.json"
+
+    elif args.dataset == "csqa":
+        with jsonlines.open("../dataset/csqa/test.jsonl", "r", encoding="UTF-8") as f:
+            test_data = [i["question"] for i in f]
+        args.output_path = "../output/csqa.json"
+
     elif args.dataset == "addsub":
-        args.dataset_path = "../dataset/addsub/AddSub.json"
-        args.output_path = "../output/addsub.txt"
-        args.strong_few_shot = few_shot_4_gsm8k_strong
-        args.weak_few_shot = few_shot_4_gsm8k_weak
-    elif args.dataset == "strategyqa":
-        args.dataset_path = "../dataset/strategyqa/train.json"
-        args.output_path = "../output/strategyqa.txt"
-        args.weak_few_shot = few_shot_4_strategyqa_weak
-        # no strong_few_shot for strategyqa
+        with open("../dataset/addsub/AddSub.json", 'r', encoding="UTF-8") as f:
+            test_data = [i["sQuestion"].strip() for i in json.load(f)]
+        args.output_path = "../output/addsub.json"
+
+    elif args.dataset == "stqa":
+        with open("../dataset/stqa/test.json", 'r', encoding="UTF-8") as f:
+            test_data = [i["question"] for i in json.load(f)]
+        args.output_path = "../output/stqa.json"
+
     elif args.dataset == "svamp":
-        args.dataset_path = "../dataset/svamp/SVAMP.json"
-        args.output_path = "../output/svamp.txt"
-        args.strong_few_shot = few_shot_4_gsm8k_strong
-        args.weak_few_shot = few_shot_4_gsm8k_weak
+        with open("../dataset/svamp/SVAMP.json", 'r', encoding="UTF-8") as f:
+            test_data = [i["Body"].strip() + " " + i["Question"].strip() for i in json.load(f)]
+        args.output_path = "../output/svamp.json"
+
     elif args.dataset == "asdiv":
-        args.dataset_path = "../dataset/asdiv/asdiv.json"
-        args.output_path = "../output/asdiv.txt"
-        args.strong_few_shot = few_shot_4_gsm8k_strong
-        args.weak_few_shot = few_shot_4_gsm8k_weak
+        with open("../dataset/asdiv/asdiv.json", 'r', encoding="UTF-8") as f:
+            test_data = [ i["input"].strip() for i in json.load(f)["Instances"]]
+        args.output_path = "../output/asdiv.json"
+
     elif args.dataset == "singleeq":
-        args.dataset_path = "../dataset/singleeq/questions.json"
-        args.output_path = "../output/singleeq.txt"
-        args.strong_few_shot = few_shot_4_gsm8k_strong
-        args.weak_few_shot = few_shot_4_gsm8k_weak
+        with open("../dataset/singleeq/questions.json", 'r', encoding="UTF-8") as f:
+            test_data = [i["sQuestion"].strip() for i in json.load(f)]
+        args.output_path = "../output/singleeq.json"
+
     elif args.dataset == "date":
-        args.dataset_path = "../dataset/date/test.json"
-        args.output_path = "../output/date.txt"
-        args.strong_few_shot = few_shot_4_date_strong
-        args.weak_few_shot = few_shot_4_date_weak
+        with open("../dataset/date/test.json", 'r', encoding="UTF-8") as f:
+            test_data = [i["question"] for i in json.load(f)]
+        args.output_path = "../output/date.json"
+
     elif args.dataset == "object_tracking":
-        args.dataset_path = "../dataset/object_tracking/test.json"
-        args.output_path = "../output/object_tracking.txt"
-        args.strong_few_shot = few_shot_4_object_strong
-        args.weak_few_shot = few_shot_4_object_weak
+        with open("../dataset/object_tracking/test.json", 'r', encoding="UTF-8") as f:
+            test_data = [i["question"] for i in json.load(f)]
+        args.output_path = "../output/object_tracking.json"
+
     elif args.dataset == "letter":
-        args.dataset_path = "../dataset/lastletter/last_letters.json"
-        args.output_path = "../output/lastletter.txt"
-        args.strong_few_shot = few_shot_4_lastletter_strong
-        args.weak_few_shot = few_shot_4_lastletter_weak
+        with open("../dataset/lastletter/last_letters.json", 'r', encoding="UTF-8") as f:
+            test_data = [i["question"] for i in json.load(f)["examples"]]
+        args.output_path = "../output/lastletter.json"
+
     else:
         raise ValueError("dataset is not properly defined ...")
-    return args
+
+    if args.method == "strong" or args.method == "weak":
+        shared_fewshot = ["gsm8k", "asdiv", "svamp", "singleeq", "addsub"]
+        with open("../dataset/few_shot.json", 'r', encoding="UTF-8") as f:
+            fewshots = json.load(f)
+            if args.dataset in shared_fewshot:
+                few_shot = fewshots["gsm8k"][args.method]
+            else:
+                few_shot = fewshots[args.dataset][args.method]
+                # no strong_few_shot for stqa
+    else:
+        few_shot = ""
+    data = {"test_data":test_data,"few_shot":few_shot}
+
+    return data
 
 
 def process4evaluate(args):
@@ -106,9 +120,9 @@ def process4evaluate(args):
             golden = label_f.readlines()
         re_pattern_pre="{.*(([1-9]\d*\.?\d*)|(0\.\d*[1-9])|([0-9]+)).*?}"
         re_pattern_post="([1-9]\d*\.?\d*)|(0\.\d*[1-9])|([0-9]+)"
-    elif args.dataset == "commonsenseqa":
-        with open("../data/commonsenseqa/test.jsonl", 'r', encoding="UTF-8") as label_f:
-            for i in label_f.readlines():
+    elif args.dataset == "csqa":
+        with open("../data/csqa/test.jsonl", 'r', encoding="UTF-8") as label_f:
+            for i in label_f:
                 golden.append(json.loads(i)["answer"])
         re_pattern_pre = "\[[\s\S]*?\]"
     elif args.dataset == "addsub":
@@ -122,8 +136,8 @@ def process4evaluate(args):
             golden.append(a)
         re_pattern_pre="{.*(([1-9]\d*\.?\d*)|(0\.\d*[1-9])|([0-9]+)).*?}"
         re_pattern_post="([1-9]\d*\.?\d*)|(0\.\d*[1-9])|([0-9]+)"
-    elif args.dataset == "strategyqa":
-        with open("../data/strategyqa/strategyqa_test.json", 'r', encoding='utf-8') as f:
+    elif args.dataset == "stqa":
+        with open("../data/stqa/strategyqa_test.json", 'r', encoding='utf-8') as f:
             json_data = json.load(f)
         for data in json_data:
             if data["answer"]:

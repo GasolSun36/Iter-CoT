@@ -54,7 +54,7 @@ with open(args.result_file, 'r') as f:
                                         if flag == 1:
                                             break
                                     of.write(str(answer) + ':' + str(flag) + '\n')
-                                elif args.dataset == 'commonsenseqa':
+                                elif args.dataset == 'csqa':
                                     answer = re.search(re_pattern_pre, i["answer"]["choices"][j]["text"]).group()[1:-1].split('.')
                                     flag = 0
                                     for a in answer:
@@ -68,7 +68,7 @@ with open(args.result_file, 'r') as f:
                                         if flag == 1:
                                             break
                                     of.write(answer[0] + ':' + str(flag) + '\n')
-                                elif args.dataset == 'strategyqa':
+                                elif args.dataset == 'stqa':
                                     answer = re.search(re_pattern_pre, i["answer"]["choices"][j]["text"]).group()[1:-1]
                                     flag = 0
                                     if "the correct answer is:" in answer.lower():
