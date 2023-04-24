@@ -13,14 +13,14 @@ if __name__ == '__main__':
                         default=500, help="the max length of LLMs output.")
     parser.add_argument("--batch_size", type=int,
                         default=20, help="20 samples each batch.")
-    parser.add_argument("--method", type=str, help="strong or weak or zero_shot")
+    parser.add_argument("--method", type=str, help="strong or weak or zero_shot_cot")
 
     args = parser.parse_args()
     data = read_dataset(args)
     with open(args.output_file, 'a+', encoding="UTF-8") as out:
         if args.method == "strong" or args.method == "weak":
             data = [i["few_shot"] + '\n' + "\n\nQ: " + i["test_data"] + "\nA: Reasoning Process:" for i in data]
-        elif args.method == "zero_shot":
+        elif args.method == "zero_shot_cot":
             data = ["Please solve the following math word question and put the final digital result into a curly brace {like this} after 'the correct answer is: '. " + "Q: " + i["test_data"] + "\n A: Let's think step by step, " for i in data]
         else:
             raise ValueError("No such methods.")
