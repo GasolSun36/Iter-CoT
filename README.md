@@ -4,7 +4,11 @@ Source code for paper "Enhancing Chain-of-Thoughts Prompting with Iterative Boot
 
 Iter-CoT outperforms existing prompting approaches on three distinct reasoning tasks (arithmetic, commonsense and symbolic) across eleven datasets, and demonstrate that LLMs have the capability to enhance their performance by integrating iterative bootstrapping for self-correction and summarization to obtain better reasoning chains for demonstrations.
 
+## Methods
+![img](https://github.com/GasolSun36/Iter-CoT/blob/main/assets/models.png)
 
+## Experiments
+![img](https://github.com/GasolSun36/Iter-CoT/blob/main/assets/experiment.png)
 
 This repo is still developing, feel free to report bugs and we will fix them.
 ## Requirements 
@@ -12,7 +16,6 @@ This repo is still developing, feel free to report bugs and we will fix them.
  - python 3.8
  - jsonlines
  - openai
-
 
 
 ***
@@ -32,6 +35,7 @@ Once we have the results of Zero-Shot-CoT, we can generate Iter-CoT(S) with the 
 ```bash
 python iter_cot_strong.py
 ```
+
 ### Iter-CoT(W)
 We can generate Iter-CoT(W) with the following command:
 ```bash
@@ -54,3 +58,13 @@ python evaluate.py --data_file gsm8k \
 --prompt_file ../output/gsm8k_samples.txt \
 --output_file ../output/gsm8k_results.txt \ final results
 ```
+
+### Comparison with CoT
+![img](https://github.com/GasolSun36/Iter-CoT/blob/main/assets/example.png)
+
+
+### Iter-CoT(W) and Iter-CoT(S)
+
+![img](https://github.com/GasolSun36/Iter-CoT/blob/main/assets/weak.png)
+
+![img](https://github.com/GasolSun36/Iter-CoT/blob/main/assets/strong.png)
