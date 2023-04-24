@@ -11,17 +11,33 @@ Iter-CoT outperforms existing prompting approaches on three distinct reasoning t
 ![img](https://github.com/GasolSun36/Iter-CoT/blob/main/assets/experiment.png)
 
 This repo is still developing, feel free to report bugs and we will fix them.
+
+## How to cite
+If you extend or use this work, please cite the [paper](https://arxiv.org/abs/2212.07249) where it was introduced:
+
+```
+
+```
+
+
 ## Requirements 
 
  - python 3.8
  - jsonlines
  - openai
 
-
 ***
 ## Code
 ### Datasets
 The eleven datasets among three different reasoning tasks are in `/Iter-CoT/dataset/`. In particular, for the **Object Tracking** and **Date Understanding** without training set, we sampled a small portion of the test set as the training set (see the paper for the details). We use gsm8k as an example to run the code.
+
+### API keys
+Set your own OpenAI API keys in `/Iter-CoT/code/utils.py`
+```bash
+model = "Your Base Large Language Models"
+api_key = "Your own API keys"
+```
+    
 ### Zero-Shot-CoT
 In order to start generating Iter-CoT, we first perform Zero-Shot-CoT, execute the following command:
 ```bash
