@@ -13,10 +13,17 @@ Iter-CoT outperforms existing prompting approaches on three distinct reasoning t
 This repo is still developing, feel free to report bugs and we will fix them.
 
 ## How to cite
-If you extend or use this work, please cite the [paper](https://arxiv.org/abs/2212.07249) where it was introduced:
+If you extend or use this work, please cite the [paper](https://arxiv.org/abs/2304.11657) where it was introduced:
 
 ```
-
+@misc{sun2023enhancing,
+      title={Enhancing Chain-of-Thoughts Prompting with Iterative Bootstrapping in Large Language Models}, 
+      author={Jiashuo Sun and Yi Luo and Yeyun Gong and Chen Lin and Yelong Shen and Jian Guo and Nan Duan},
+      year={2023},
+      eprint={2304.11657},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
 ```
 
 
@@ -35,7 +42,6 @@ The eleven datasets among three different reasoning tasks are in `/Iter-CoT/data
 Set your own OpenAI API keys in `/Iter-CoT/code/utils.py`
 ```bash
 model = "Your Base Large Language Models"
-api_key = "Your own API keys"
 ```
     
 ### Zero-Shot-CoT
@@ -72,7 +78,7 @@ After running the inference in the previous step, we clean the generated answers
 python evaluate.py --data_file gsm8k \
 --result_file ../output/gsm8k.json \ # generated from inference
 --prompt_file ../output/gsm8k_samples.txt \
---output_file ../output/gsm8k_results.txt \ final results
+--output_file ../output/gsm8k_results.txt \ # final results
 ```
 
 ### Comparison with CoT
