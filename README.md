@@ -1,6 +1,8 @@
 # Iter-CoT
 
-Source code for paper "Enhancing Chain-of-Thoughts Prompting with Iterative Bootstrapping in Large Language Models"
+Source code for paper "**Enhancing Chain-of-Thoughts Prompting with Iterative Bootstrapping in Large Language Models**"
+
+We introduce Iter-CoT (**Ite**rative bootst**r**apping in **C**hain-**o**f-**T**houghts Prompting), an iterative bootstrapping approach for selecting exemplars and generating reasoning chains. By utilizing iterative bootstrapping, our approach enables LLMs to autonomously rectify errors, resulting in more precise and comprehensive reasoning chains. Simultaneously, our approach selects challenging yet answerable questions accompanied by reasoning chains as exemplars with a moderate level of difficulty, which enhances the LLMs' generalizability across varying levels of difficulty.
 
 Iter-CoT outperforms existing prompting approaches on three distinct reasoning tasks (arithmetic, commonsense and symbolic) across eleven datasets, and demonstrate that LLMs have the capability to enhance their performance by integrating iterative bootstrapping for self-correction and summarization to obtain better reasoning chains for demonstrations.
 
@@ -43,7 +45,7 @@ Set your own OpenAI API keys in `/Iter-CoT/code/utils.py`
 ```bash
 model = "Your Base Large Language Models"
 ```
-    
+
 ### Zero-Shot-CoT
 In order to start generating Iter-CoT, we first perform Zero-Shot-CoT, execute the following command:
 ```bash
@@ -82,10 +84,13 @@ python evaluate.py --data_file gsm8k \
 ```
 
 ### Comparison with CoT
+We observe that Iter-CoT naturally generates more precise and comprehensive reasoning chains compared to CoT, resulting in higher overall performance.
+
 ![img](https://github.com/GasolSun36/Iter-CoT/blob/main/assets/example.png)
 
 
 ### Iter-CoT(W) and Iter-CoT(S)
+The two examples in the Iter-CoT(W) and Iter-CoT(S) is selected from the training set of GSM8K.
 
 ![img](https://github.com/GasolSun36/Iter-CoT/blob/main/assets/weak.png)
 
