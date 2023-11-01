@@ -2,8 +2,8 @@ import json
 import tqdm
 import argparse
 import time
-import jsonlines
 from utils import *
+from eval import *
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -13,15 +13,18 @@ if __name__ == '__main__':
                         default=500, help="the max length of LLMs output.")
     parser.add_argument("--batch_size", type=int,
                         default=20, help="20 samples each batch.")
-    parser.add_argument("--method", type=str, help="strong or weak or zero_shot_cot")
-
+    parser.add_argument("--method", type=str, help="strong or weak or zero_shot")
+    parser.add_argument("--iter_num", type=int, default=1)
+    parser.add_argument("--shot_num", type=int)
     args = parser.parse_args()
-    data = read_dataset(args)
-    with open(args.output_file, 'a+', encoding="UTF-8") as out:
+    args.stage = "inference"
+    path = parse_path(args)
+    test_data = read_test_dataset(args, path)
+    with open(path["inference_output"], 'w', encoding="UTF-8") as out:
         if args.method == "strong" or args.method == "weak":
-            data = [i["few_shot"] + '\n' + "\n\nQ: " + i["test_data"] + "\nA: Reasoning Process:" for i in data]
-        elif args.method == "zero_shot_cot":
-            data = ["Please solve the following math word question and put the final digital result into a curly brace {like this} after 'the correct answer is: '. " + "Q: " + i["test_data"] + "\n A: Let's think step by step, " for i in data]
+            data = [test_data["few_shot"] + '\n' + "\n\nQ: " + i + "\nA: Reasoning Process:" for i in test_data["test_data"]]
+        elif args.method == "zero_shot":
+            data = [ test_data["prompt"] + i + "\n A: Let's think step by step, " for i in test_data["test_data"]]
         else:
             raise ValueError("No such methods.")
         count = len(data) // args.batch_size
@@ -37,5 +40,6 @@ if __name__ == '__main__':
                     time.sleep(3)
             for j in range(len(i)):
                 out.write(json.dumps({"prompt": i[j]}) + "\n")
-            out.write(json.dumps({"answer": answer.json()}) + "\n")
+            out.write(json.dumps({"answer": answer.to_dict()}) + "\n")
 
+    eval(args)
