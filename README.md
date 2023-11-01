@@ -5,7 +5,7 @@ This repository is the official implementation of ["Enhancing Chain-of-Thoughts 
 
 ## Pipeline of Iter-CoT
 
-![image](https://github.com/GasolSun36/ToG/blob/main/assets/pipeline.png)
+![image](https://github.com/GasolSun36/Iter-CoT/blob/main/assets/pipeline.png)
 
 
 ## Requirements
@@ -61,7 +61,7 @@ The output will be saved in `output/gsm8k/run/iter1_inf_output.json` and the sta
 
 ## Experiment Results
 
-![image](https://github.com/GasolSun36/ToG/blob/main/assets/experiment.png)
+![image](https://github.com/GasolSun36/Iter-CoT/blob/main/assets/experiment.png)
 
 ## Contributing
 
