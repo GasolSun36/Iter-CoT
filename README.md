@@ -1,7 +1,11 @@
 
 # Enhancing Chain-of-Thoughts Prompting with Iterative Bootstrapping in Large Language Models
 
-This repository is the official implementation of Enhancing Chain-of-Thoughts Prompting with Iterative Bootstrapping in Large Language Models. 
+This repository is the official implementation of ["Enhancing Chain-of-Thoughts Prompting with Iterative Bootstrapping in Large Language Models"](https://arxiv.org/pdf/2304.11657.pdf). 
+
+## Pipeline of Iter-CoT
+
+![image](https://github.com/GasolSun36/ToG/blob/main/assets/pipeline.png)
 
 
 ## Requirements
@@ -17,7 +21,7 @@ Please put your `OpenAI API KEY` to the `api_key` variable and the model to use 
 ### Datasets
 The eleven datasets among three different reasoning tasks are in `/Iter-CoT/dataset/`. In particular, for the **Date Understanding** without training set, we sampled a small portion of the test set as the training set (see the paper for the details).
 
-## Training
+## Inference
 
 ### Iter-CoT
 To employ Iter-CoT to generate the demonstrations, you can use the following command:
@@ -55,6 +59,9 @@ python inference.py --dataset "gsm8k" --iter_num $iter_num  --method "run" --sho
 ```
 The output will be saved in `output/gsm8k/run/iter1_inf_output.json` and the statistic result will be saved in `output/gsm8k/run/iter1_inf_result.json`.
 
+## Experiment Results
+
+![image](https://github.com/GasolSun36/ToG/blob/main/assets/experiment.png)
 
 ## Contributing
 
