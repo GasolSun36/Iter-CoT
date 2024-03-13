@@ -3,6 +3,8 @@
 
 This repository is the official implementation of ["Enhancing Chain-of-Thoughts Prompting with Iterative Bootstrapping in Large Language Models"](https://arxiv.org/pdf/2304.11657.pdf). 
 
+Our paper is accepted by NAACL 2024 as findings! 🥳🥳🥳
+
 ## Pipeline of Iter-CoT
 
 ![image](https://github.com/GasolSun36/Iter-CoT/blob/main/assets/pipeline.png)
